@@ -9,7 +9,6 @@ public class Config {
     private static Connection MySQLConfig;
     
     public static Connection configDB() throws SQLException{
-        System.out.println("Haloo");
         try{
             String url = "jdbc:mysql://localhost:3306/parking_db";
             String user = "root";
