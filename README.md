@@ -1,11 +1,10 @@
-APLIKASI PARKING SYSTEM
-APACHE NETBEANS 12.0
+APLIKASI PARKING SYSTEM Menggunakan APACHE NETBEANS 12.0
 
 Author. Mahasiswa Gunadarma
 
 Cara pakai projek
 1. Punya local server/database(XAMPP), untuk menyimpan data kendaraan,user login, dan report penghasilan
-2. Silahkan download dan import parking_db.sql  
+2. Download dan import parking_db.sql  
 3. Ekstrak mysql-connector-java-8.0.24.zip , dan tambahkan file .jar kedalam projek (Untuk menghubungkan ke database)
 4. Ketika login aplikasi
     Username = admin, password = admin123  (bisa dilihat di tabel user)
