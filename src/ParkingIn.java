@@ -28,9 +28,11 @@ int waktumulai;
                 int tahun = kalender.get(Calendar.YEAR);
                 int bulan = kalender.get(Calendar.MONTH);
                 int tanggal = kalender.get(Calendar.DAY_OF_MONTH);
-                int jam = kalender.get(Calendar.HOUR);
+                int jam = kalender.get(Calendar.HOUR_OF_DAY);
                 int menit = kalender.get(Calendar.MINUTE);
                 int detik = kalender.get(Calendar.SECOND);
+                
+                
              
              String time = tahun +"/"+bulan+"/"+ tanggal +"   "+jam + ":" + menit + ":" + detik + " ";
              lbJam.setText(time);               
