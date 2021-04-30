@@ -32,7 +32,7 @@ int waktumulai;
                 int menit = kalender.get(Calendar.MINUTE);
                 int detik = kalender.get(Calendar.SECOND);
                 
-                
+                  System.out.println("Testtt");
              
              String time = tahun +"/"+bulan+"/"+ tanggal +"   "+jam + ":" + menit + ":" + detik + " ";
              lbJam.setText(time);               
