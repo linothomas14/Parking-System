@@ -44,7 +44,7 @@ public class Report extends javax.swing.JFrame {
     }
                     
     try{
-            String sql = "SELECT tarif FROM report WHERE waktu_masuk LIKE '"+tahun+"_"+bulan2+"%'";
+            String sql = "SELECT tarif FROM report WHERE waktu_keluar LIKE '"+tahun+"_"+bulan2+"%'";
             java.sql.Connection conn= (Connection)Config.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet res = stm.executeQuery(sql);
