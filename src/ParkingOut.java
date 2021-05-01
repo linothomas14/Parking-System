@@ -17,17 +17,13 @@ public class ParkingOut extends javax.swing.JFrame {
         lbTotal.setText(null);
     }
     
-    public String getDate(){
-        Date thisDate = new Date();
-        SimpleDateFormat dateForm = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
-        String res = dateForm.format(thisDate);
-    return res;
-    }
+    
     
     public String lamaParkir(String waktu_masuk){
+        ParkingIn a = new ParkingIn();
         SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");  
         String dateStart = waktu_masuk;
-        String dateStop = getDate();
+        String dateStop = a.getDate();
         Date d1 = null;
         Date d2 = null;
         try {
@@ -51,8 +47,9 @@ public class ParkingOut extends javax.swing.JFrame {
     return s ;
     }
     public String hitung(String waktu_masuk,String jenis_kendaraan){
+        ParkingIn a = new ParkingIn();
         String dateStart = waktu_masuk;
-        String dateStop = getDate();
+        String dateStop = a.getDate();
         String s;
         long total,biaya = 0,biaya_inap = 0;
         
@@ -91,10 +88,7 @@ public class ParkingOut extends javax.swing.JFrame {
         long diffMinutes = diff / (60 * 1000) % 60; 
         long diffHours = diff / (60 * 60 * 1000); 
         long diffDays = diff / (24 *60 * 60 * 1000); 
-//        System.out.println("Time in seconds: " + diffSeconds + " seconds.");         
-//        System.out.println("Time in minutes: " + diffMinutes + " minutes.");         
-//        System.out.println("Time in hours: " + diffHours + " hours."); 
-        
+
         if(diffDays > 0){
         total = (diffDays) * biaya_inap;
         } else{
@@ -110,7 +104,7 @@ public class ParkingOut extends javax.swing.JFrame {
     return s;
     }
     
-    private void tampilkan_data(){
+    public void tampilkan_data(){
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("No. Parking");
         model.addColumn("Plat Nomor");
@@ -136,6 +130,7 @@ public class ParkingOut extends javax.swing.JFrame {
     public ParkingOut() {
         initComponents();
         tampilkan_data();
+        
         
     }
 
@@ -429,7 +424,43 @@ public class ParkingOut extends javax.swing.JFrame {
 
     private void btBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBayarActionPerformed
         // TODO add your handling code here:
+        try{
+            ParkingIn a = new ParkingIn();
+            String sql = "SELECT id_kendaraan,jenis_kendaraan,plat_nomor,waktu_masuk FROM parkir WHERE plat_nomor = '"+txtPlat.getText()+"'";
+            java.sql.Connection conn= (Connection)Config.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql);
+            res.next();
+            String no_parkir = res.getString(1);
+            String jenis_kendaraan = res.getString(2);
+            String plat_nomor = res.getString(3);
+            String waktu_masuk = res.getString(4);
+            lbIdParkir.setText(no_parkir);
+            lbJenis.setText(jenis_kendaraan);
+            lbWaktuMasuk.setText(lamaParkir(waktu_masuk));
+            lbTotal.setText(hitung(waktu_masuk,jenis_kendaraan));
+            String tarif = hitung(waktu_masuk,jenis_kendaraan);
+            
+            String sql1 = "INSERT INTO report  (id_kendaraan,jenis_kendaraan,plat_nomor,waktu_masuk,waktu_keluar,tarif) VALUES ('"
+                    +no_parkir+"','"
+                    +jenis_kendaraan+"','"
+                    +plat_nomor+"','"
+                    +waktu_masuk +"','"
+                    +a.getDate()+ "','"
+                    +tarif+"')";
+            java.sql.PreparedStatement pstm1 = conn.prepareStatement(sql1);
+            pstm1.execute();
+            
+            String sql2 = "DELETE FROM parkir WHERE plat_nomor = '"+txtPlat.getText()+"'";
+            java.sql.PreparedStatement pstm = conn.prepareStatement(sql2);
+            pstm.execute();
         
+        JOptionPane.showMessageDialog(this, "Selamat jalan") ;
+        tampilkan_data();
+        kosongkan_form();
+        }catch(HeadlessException | SQLException e){
+           JOptionPane.showMessageDialog(this, "Data tidak ditemukan "+e.getMessage()) ;
+        }
         
         
         

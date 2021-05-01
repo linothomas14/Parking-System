@@ -40,6 +40,11 @@ public class Menu extends javax.swing.JFrame {
         });
 
         btReport.setText("Report");
+        btReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btReportActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -91,6 +96,12 @@ public class Menu extends javax.swing.JFrame {
         this.setVisible(false);
         new ParkingOut().setVisible(true);
     }//GEN-LAST:event_btParkOutActionPerformed
+
+    private void btReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btReportActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        new Report().setVisible(true);
+    }//GEN-LAST:event_btReportActionPerformed
 
     /**
      * @param args the command line arguments

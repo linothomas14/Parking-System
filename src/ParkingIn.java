@@ -169,7 +169,10 @@ int waktumulai;
         if(!txtPlat.getText().isEmpty()){
         try{
 
-            String sql ="INSERT INTO parkir  (plat_nomor,jenis_kendaraan,waktu_masuk) VALUES ('"+txtPlat.getText()+"','"+cbJenis.getSelectedItem()+"','"+getDate()+"')";
+            String sql ="INSERT INTO parkir  (plat_nomor,jenis_kendaraan,waktu_masuk) VALUES ('"
+                    +txtPlat.getText()+"','"
+                    +cbJenis.getSelectedItem()+"','"
+                    +getDate()+"')";
             java.sql.Connection conn = (Connection)Config.configDB();
             java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
             pstm.execute();
