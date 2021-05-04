@@ -27,7 +27,7 @@ public class Report extends javax.swing.JFrame {
     public int getDigit(int bulan){
       int digit=0;
       for (; bulan != 0; bulan /= 10, ++digit) {
-    }
+      }
     return digit;
     }
     public void jumlah(String temp_tahun, int temp_bulan){
@@ -41,7 +41,7 @@ public class Report extends javax.swing.JFrame {
          bulan2 = "0"+String.valueOf(bulan);
     } else{
         bulan2 = String.valueOf(bulan); 
-    }
+    }                                                      
                     
     try{
             String sql = "SELECT tarif FROM report WHERE waktu_keluar LIKE '"+tahun+"_"+bulan2+"%'";

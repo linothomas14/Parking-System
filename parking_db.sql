@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2021 at 07:01 PM
+-- Generation Time: May 04, 2021 at 04:23 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.15
 
@@ -85,12 +85,8 @@ CREATE TABLE `report` (
 --
 
 INSERT INTO `report` (`id_kendaraan`, `plat_nomor`, `jenis_kendaraan`, `waktu_masuk`, `waktu_keluar`, `tarif`) VALUES
-(1, 'T5566JA', 'Motor', '21/04/28 10:56:37', '0', 5000),
-(2, 'T5566JB', 'Motor', '21/04/26 10:56:37', '0', 7000),
 (26, 'F4444YY', 'Truk', '21/04/29 17:50:21', '21/05/01 22:22:59', 30000),
-(27, 'B1232', 'Motor', '21/04/30 15:28:02', '0', 5000),
-(28, 'B1234DD', 'Bis', '21/04/30 15:31:06', '21/05/01 22:18:58', 15000),
-(29, 'B1030FA', 'Motor', '21/04/30 16:05:35', '0', 5000);
+(28, 'B1234DD', 'Bis', '21/04/30 15:31:06', '21/05/01 22:18:58', 15000);
 
 --
 -- Indexes for dumped tables
@@ -122,7 +118,7 @@ ALTER TABLE `report`
 -- AUTO_INCREMENT for table `parkir`
 --
 ALTER TABLE `parkir`
-  MODIFY `id_kendaraan` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id_kendaraan` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `report`
