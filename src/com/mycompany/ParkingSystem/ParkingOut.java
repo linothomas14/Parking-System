@@ -1,3 +1,5 @@
+package com.mycompany.ParkingSystem;
+
 import java.awt.HeadlessException;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
@@ -6,104 +8,20 @@ import java.text.ParseException;
 import javax.swing.JOptionPane;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import com.mycompany.Kendaraan.Kendaraan;
 
 /**
  * @author Yulyano Thomas
  */
 public class ParkingOut extends javax.swing.JFrame {
+    Config con = new Config();
+    Kendaraan ken = new Kendaraan();
     private void kosongkan_form(){
         txtPlat.setText(null);
         lbWaktuMasuk.setText(null);
         lbTotal.setText(null);
     }
-    
-    
-    
-    public String lamaParkir(String waktu_masuk){
-        ParkingIn a = new ParkingIn();
-        SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");  
-        String dateStart = waktu_masuk;
-        String dateStop = a.getDate();
-        Date d1 = null;
-        Date d2 = null;
-        try {
-            d1 = format.parse(dateStart);
-            d2 = format.parse(dateStop);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }    
-        // Get msec from each, and subtract.
-        long diff = d2.getTime() - d1.getTime();
-        long diffSeconds = diff / 1000 % 60;  
-        long diffMinutes = diff / (60 * 1000) % 60; 
-        long diffHours = diff / (60 * 60 * 1000) %24 ; 
-        long diffDays = diff / (24 *60 * 60 * 1000); 
 
-        String hari = String.valueOf(diffDays);
-        String jam = String.valueOf(diffHours);
-        String menit = String.valueOf(diffMinutes);
-        String detik = String.valueOf(diffSeconds);
-        String s= hari+ " Hari, " +jam+ " Jam, " +menit+ " Menit, " +detik+ " Detik ";
-    return s ;
-    }
-    public String hitung(String waktu_masuk,String jenis_kendaraan){
-        ParkingIn a = new ParkingIn();
-        String dateStart = waktu_masuk;
-        String dateStop = a.getDate();
-        String s;
-        long total,biaya = 0,biaya_inap = 0;
-        
-        switch(jenis_kendaraan){    
-        case "Motor":    
-            biaya = 1500;  
-            biaya_inap = 5000;
-            break;  
-        case "Mobil":    
-            biaya = 3000;  
-            biaya_inap = 15000;
-            break; 
-         case "Truk":    
-            biaya = 4000;
-            biaya_inap = 15000;
-         break; 
-         case "Bis":    
-            biaya = 4000;  
-            biaya_inap = 15000;
-            break;  
-        }    
-                
-        // Custom date format
-        SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");  
-
-        Date d1 = null;
-        Date d2 = null;
-        try {
-            d1 = format.parse(dateStart);
-            d2 = format.parse(dateStop);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }    
-        long diff = d2.getTime() - d1.getTime();
-        long diffSeconds = diff / 1000 % 60;  
-        long diffMinutes = diff / (60 * 1000) % 60; 
-        long diffHours = diff / (60 * 60 * 1000); 
-        long diffDays = diff / (24 *60 * 60 * 1000); 
-
-        if(diffDays > 0){
-        total = (diffDays) * biaya_inap;
-        } else{
-        total = (diffHours+1) * biaya;
-            if(total > biaya_inap){
-                total = biaya_inap;
-            }
-            if(diffDays == 0 && diffHours ==0 && diffMinutes < 10){
-            total = 0;
-            }
-        }
-        s=String.valueOf(total);
-    return s;
-    }
-    
     public void tampilkan_data(){
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("No. Parking");
@@ -364,14 +282,10 @@ public class ParkingOut extends javax.swing.JFrame {
     private void btHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btHapusActionPerformed
         // TODO add your handling code here:
         try{
-        String sql = "DELETE FROM parkir WHERE plat_nomor='" + txtPlat.getText()+"'";
-        java.sql.Connection conn = (Connection)Config.configDB();
-        java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
-        pstm.execute();
-        JOptionPane.showMessageDialog(null, "Proses Hapus data berhasil") ;
+        con.hapus(txtPlat.getText());
         tampilkan_data();
         kosongkan_form();
-        }catch(HeadlessException | SQLException e){
+        }catch(HeadlessException |SQLException e){
            JOptionPane.showMessageDialog(this, e.getMessage()) ;
         }
     }//GEN-LAST:event_btHapusActionPerformed
@@ -407,8 +321,8 @@ public class ParkingOut extends javax.swing.JFrame {
             String no_parkir = res.getString(3);
             lbIdParkir.setText(no_parkir);
             lbJenis.setText(jenis_kendaraan);
-            lbWaktuMasuk.setText(lamaParkir(waktu_masuk));
-            lbTotal.setText(hitung(waktu_masuk,jenis_kendaraan));
+            lbWaktuMasuk.setText(ken.lamaParkir(waktu_masuk));
+            lbTotal.setText(ken.hitung(waktu_masuk,jenis_kendaraan));
             //perhitungan
         tampilkan_data();
         }catch(HeadlessException | SQLException e){
@@ -423,8 +337,10 @@ public class ParkingOut extends javax.swing.JFrame {
 
     private void btBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBayarActionPerformed
         // TODO add your handling code here:
+        Config conn1 = new Config();
+        
         try{
-            ParkingIn a = new ParkingIn();
+            
             String sql = "SELECT id_kendaraan,jenis_kendaraan,plat_nomor,waktu_masuk FROM parkir WHERE plat_nomor = '"+txtPlat.getText()+"'";
             java.sql.Connection conn= (Connection)Config.configDB();
             java.sql.Statement stm = conn.createStatement();
@@ -434,18 +350,21 @@ public class ParkingOut extends javax.swing.JFrame {
             String jenis_kendaraan = res.getString(2);
             String plat_nomor = res.getString(3);
             String waktu_masuk = res.getString(4);
+            
+            ken.jenis_kendaraan = jenis_kendaraan;
+            
             lbIdParkir.setText(no_parkir);
             lbJenis.setText(jenis_kendaraan);
-            lbWaktuMasuk.setText(lamaParkir(waktu_masuk));
-            lbTotal.setText(hitung(waktu_masuk,jenis_kendaraan));
-            String tarif = hitung(waktu_masuk,jenis_kendaraan);
+            lbWaktuMasuk.setText(ken.lamaParkir(waktu_masuk));
+            lbTotal.setText(ken.hitung(waktu_masuk,jenis_kendaraan));
+            String tarif = ken.hitung(waktu_masuk,jenis_kendaraan);
             
             String sql1 = "INSERT INTO report  (id_kendaraan,jenis_kendaraan,plat_nomor,waktu_masuk,waktu_keluar,tarif) VALUES ('"
                     +no_parkir+"','"
                     +jenis_kendaraan+"','"
                     +plat_nomor+"','"
                     +waktu_masuk +"','"
-                    +a.getDate()+ "','"
+                    +conn1.getDate()+ "','"
                     +tarif+"')";
             java.sql.PreparedStatement pstm1 = conn.prepareStatement(sql1);
             pstm1.execute();
@@ -472,6 +391,7 @@ public class ParkingOut extends javax.swing.JFrame {
     }//GEN-LAST:event_btKembaliActionPerformed
 
     public static void main(String args[]) {
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);

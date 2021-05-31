@@ -1,3 +1,5 @@
+package com.mycompany.ParkingSystem;
+
 import java.awt.HeadlessException;
 import java.sql.SQLException;
 import java.sql.Connection;

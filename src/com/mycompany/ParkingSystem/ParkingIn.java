@@ -1,3 +1,5 @@
+package com.mycompany.ParkingSystem;
+
 
 import com.mysql.cj.xdevapi.Statement;
 import java.awt.HeadlessException;
@@ -17,12 +19,13 @@ import java.util.GregorianCalendar;
  */
 public class ParkingIn extends javax.swing.JFrame {
 int waktumulai;
+Config conn = new Config();
     public ParkingIn() {
         initComponents();
         new Thread(){
             @Override
             public void run(){
- 
+                String detik = "";
               while(waktumulai == 0){
                 Calendar kalender = new GregorianCalendar();
                 int tahun = kalender.get(Calendar.YEAR);
@@ -30,11 +33,16 @@ int waktumulai;
                 int tanggal = kalender.get(Calendar.DAY_OF_MONTH);
                 int jam = kalender.get(Calendar.HOUR_OF_DAY);
                 int menit = kalender.get(Calendar.MINUTE);
-                int detik = kalender.get(Calendar.SECOND);
+                int temp_detik = kalender.get(Calendar.SECOND);
              
+                if(temp_detik<10){
+                 detik = "0"+temp_detik;
+                } else{
+                    detik = Integer.toString(temp_detik);
+                }
              String time = tahun +"/"+bulan+"/"+ tanggal +"   "+jam + ":" + menit + ":" + detik + " ";
              lbJam.setText(time);               
-              }  
+              }
             }
         }.start();
     }
@@ -43,12 +51,6 @@ int waktumulai;
         cbJenis.setSelectedItem(this);
     }
     
-    public String getDate(){
-        Date thisDate = new Date();
-        SimpleDateFormat dateForm = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
-        String res = dateForm.format(thisDate);
-    return res;
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -172,7 +174,7 @@ int waktumulai;
             String sql ="INSERT INTO parkir  (plat_nomor,jenis_kendaraan,waktu_masuk) VALUES ('"
                     +txtPlat.getText()+"','"
                     +cbJenis.getSelectedItem()+"','"
-                    +getDate()+"')";
+                    +conn.getDate()+"')";
             java.sql.Connection conn = (Connection)Config.configDB();
             java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
             pstm.execute();

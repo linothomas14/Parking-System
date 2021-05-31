@@ -1,3 +1,5 @@
+package com.mycompany.ParkingSystem;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
