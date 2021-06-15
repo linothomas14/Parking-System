@@ -4,12 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import javax.swing.JOptionPane;
 /**
- * @author Yulyano Thomas
+ * @author Mahasiswa Gunadarma
  */
 public class Config {
     
@@ -28,15 +25,6 @@ public class Config {
     }
      return MySQLConfig;   
     }
-    
-    public void hapus(String text) throws SQLException{
-    String sql = "DELETE FROM parkir WHERE plat_nomor='" + text+"'";
-        java.sql.Connection conn = (Connection)Config.configDB();
-        java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
-        pstm.execute();
-        JOptionPane.showMessageDialog(null, "Proses Hapus data berhasil") ;
-    }
-    
     public String getDate(){
         Date thisDate = new Date();
         SimpleDateFormat dateForm = new SimpleDateFormat("yy/MM/dd HH:mm:ss");

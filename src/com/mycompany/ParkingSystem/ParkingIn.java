@@ -1,25 +1,19 @@
 package com.mycompany.ParkingSystem;
 
 
-import com.mysql.cj.xdevapi.Statement;
+import com.mycompany.Kendaraan.*;
 import java.awt.HeadlessException;
-import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
-import java.sql.Connection;
-import java.text.ParseException;
 import javax.swing.JOptionPane;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 /**
- * @author Yulyano Thomas
+ * @author Mahasiswa Gunadarma
  */
-public class ParkingIn extends javax.swing.JFrame {
+public class ParkingIn extends javax.swing.JFrame implements Interface1{
 int waktumulai;
 Config conn = new Config();
+Kendaraan ken = new Kendaraan();
     public ParkingIn() {
         initComponents();
         new Thread(){
@@ -46,7 +40,8 @@ Config conn = new Config();
             }
         }.start();
     }
-    private void kosongkan_form(){
+    @Override
+    public void kosongkan_form(){
         txtPlat.setText(null);
         cbJenis.setSelectedItem(this);
     }
@@ -169,21 +164,12 @@ Config conn = new Config();
     private void btSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSimpanActionPerformed
         // TODO add your handling code here:
         if(!txtPlat.getText().isEmpty()){
-        try{
-
-            String sql ="INSERT INTO parkir  (plat_nomor,jenis_kendaraan,waktu_masuk) VALUES ('"
-                    +txtPlat.getText()+"','"
-                    +cbJenis.getSelectedItem()+"','"
-                    +conn.getDate()+"')";
-            java.sql.Connection conn = (Connection)Config.configDB();
-            java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
-            pstm.execute();
-
-            JOptionPane.showMessageDialog(null, "Proses simpan data berhasil") ;
+            try{
+            ken.parkirMasuk(txtPlat.getText(), cbJenis.getSelectedItem().toString(), conn.getDate());
             kosongkan_form();
-        }catch(HeadlessException | SQLException e){
-            JOptionPane.showMessageDialog(this, e.getMessage()) ;
-        }
+            } catch(HeadlessException | SQLException e){
+            JOptionPane.showMessageDialog(null, e.getMessage()) ;
+            }
         }
         else {
         JOptionPane.showMessageDialog(null, "Isi plat nomor") ;

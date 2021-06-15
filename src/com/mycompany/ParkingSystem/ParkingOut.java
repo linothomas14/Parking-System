@@ -4,19 +4,17 @@ import java.awt.HeadlessException;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.sql.Connection;
-import java.text.ParseException;
 import javax.swing.JOptionPane;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import com.mycompany.Kendaraan.Kendaraan;
+import com.mycompany.Kendaraan.*;
 
 /**
- * @author Yulyano Thomas
+ * @author Mahasiswa Gunadarma
  */
-public class ParkingOut extends javax.swing.JFrame {
+public class ParkingOut extends javax.swing.JFrame implements Interface1 {
     Config con = new Config();
     Kendaraan ken = new Kendaraan();
-    private void kosongkan_form(){
+    
+    public void kosongkan_form(){
         txtPlat.setText(null);
         lbWaktuMasuk.setText(null);
         lbTotal.setText(null);
@@ -282,7 +280,7 @@ public class ParkingOut extends javax.swing.JFrame {
     private void btHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btHapusActionPerformed
         // TODO add your handling code here:
         try{
-        con.hapus(txtPlat.getText());
+        ken.hapusKendaraan(txtPlat.getText());
         tampilkan_data();
         kosongkan_form();
         }catch(HeadlessException |SQLException e){
@@ -311,18 +309,11 @@ public class ParkingOut extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(!txtPlat.getText().isEmpty()){
         try{
-            String sql = "SELECT waktu_masuk,jenis_kendaraan,id_kendaraan FROM parkir WHERE plat_nomor = '"+txtPlat.getText()+"'";
-            java.sql.Connection conn= (Connection)Config.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            res.next();
-            String waktu_masuk = res.getString(1);
-            String jenis_kendaraan = res.getString(2);
-            String no_parkir = res.getString(3);
-            lbIdParkir.setText(no_parkir);
-            lbJenis.setText(jenis_kendaraan);
-            lbWaktuMasuk.setText(ken.lamaParkir(waktu_masuk));
-            lbTotal.setText(ken.hitung(waktu_masuk,jenis_kendaraan));
+            String[] result = ken.cekBiaya(txtPlat.getText());
+            lbIdParkir.setText(result[0]);
+            lbJenis.setText(result[1]);
+            lbWaktuMasuk.setText(ken.lamaParkir(result[2]));
+            lbTotal.setText(ken.hitung(result[1],result[2]));
             //perhitungan
         tampilkan_data();
         }catch(HeadlessException | SQLException e){
@@ -336,43 +327,27 @@ public class ParkingOut extends javax.swing.JFrame {
     }//GEN-LAST:event_btCekBiayaActionPerformed
 
     private void btBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBayarActionPerformed
-        // TODO add your handling code here:
-        Config conn1 = new Config();
-        
+
         try{
-            
-            String sql = "SELECT id_kendaraan,jenis_kendaraan,plat_nomor,waktu_masuk FROM parkir WHERE plat_nomor = '"+txtPlat.getText()+"'";
             java.sql.Connection conn= (Connection)Config.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            res.next();
-            String no_parkir = res.getString(1);
-            String jenis_kendaraan = res.getString(2);
-            String plat_nomor = res.getString(3);
-            String waktu_masuk = res.getString(4);
             
-            ken.jenis_kendaraan = jenis_kendaraan;
-            
+            //Mengambil data kendaraan
+            String[] result = ken.ambilData(txtPlat.getText());
+            String no_parkir = result[0];
+            String jenis_kendaraan = result[1];
+            String plat_nomor = result[2];
+            String waktu_masuk = result[3];
             lbIdParkir.setText(no_parkir);
             lbJenis.setText(jenis_kendaraan);
             lbWaktuMasuk.setText(ken.lamaParkir(waktu_masuk));
-            lbTotal.setText(ken.hitung(waktu_masuk,jenis_kendaraan));
-            String tarif = ken.hitung(waktu_masuk,jenis_kendaraan);
+            lbTotal.setText(ken.hitung(jenis_kendaraan,waktu_masuk));
             
-            String sql1 = "INSERT INTO report  (id_kendaraan,jenis_kendaraan,plat_nomor,waktu_masuk,waktu_keluar,tarif) VALUES ('"
-                    +no_parkir+"','"
-                    +jenis_kendaraan+"','"
-                    +plat_nomor+"','"
-                    +waktu_masuk +"','"
-                    +conn1.getDate()+ "','"
-                    +tarif+"')";
-            java.sql.PreparedStatement pstm1 = conn.prepareStatement(sql1);
-            pstm1.execute();
+            //Menghitung tarif kendaraan
+            String tarif = ken.hitung(jenis_kendaraan,waktu_masuk);
             
-            String sql2 = "DELETE FROM parkir WHERE plat_nomor = '"+txtPlat.getText()+"'";
-            java.sql.PreparedStatement pstm = conn.prepareStatement(sql2);
-            pstm.execute();
-        
+            //Kendaraan Keluar & masuk ke Report tabel
+            ken.parkirKeluar(no_parkir, jenis_kendaraan, plat_nomor, waktu_masuk, tarif);
+            
         JOptionPane.showMessageDialog(this, "Selamat jalan") ;
         tampilkan_data();
         kosongkan_form();
@@ -394,7 +369,7 @@ public class ParkingOut extends javax.swing.JFrame {
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(true);
+                new ParkingOut().setVisible(true);
             }
         });
     }
