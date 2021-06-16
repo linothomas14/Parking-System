@@ -31,6 +31,23 @@ public class Kendaraan {
     private String tarif;
     Map<String, String> result = new HashMap<>();
     
+    public Map<String, String> ambilData(String platTemp)throws SQLException{
+        this.plat = platTemp;
+         String sql = "SELECT * FROM parkir WHERE plat_nomor = '"+plat+"'";
+            java.sql.Connection conn= (Connection)Config.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql);
+            res.next();
+         
+            result.clear();   
+            result.put("id_kendaraan", res.getString(1));
+            result.put("plat_nomor", res.getString(2));
+            result.put("jenis_kendaraan", res.getString(3));
+            result.put("waktu_masuk", res.getString(4));
+
+            return result;
+    }
+    
     public String parkirMasuk(String platTemp, String jenis_kendaraanTemp, String waktu_masukTemp) throws SQLException{
         this.plat = platTemp.toUpperCase();
         this.jenis_kendaraan = jenis_kendaraanTemp;
@@ -42,12 +59,8 @@ public class Kendaraan {
             java.sql.Connection conn = (Connection)Config.configDB();
             java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
             pstm.execute();
-            
-        String sql1 = "SELECT id_kendaraan FROM parkir WHERE plat_nomor = '"+plat+"'";
-           java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql1);
-            res.next();
-            return this.id_kendaraan = res.getString(1);
+            result = ambilData(platTemp);
+            return result.get("id_kendaraan");
     }
     
     public String lamaParkir(String waktu_masukTemp){
@@ -141,36 +154,6 @@ public class Kendaraan {
         java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
         pstm.execute();
         JOptionPane.showMessageDialog(null, "Proses Hapus data berhasil") ;
-    }
-    
-    public Map<String, String> cekBiaya(String plat)throws SQLException{
-        String sql = "SELECT id_kendaraan,jenis_kendaraan,waktu_masuk FROM parkir WHERE plat_nomor = '"+plat+"'";
-            java.sql.Connection conn= (Connection)Config.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            res.next();
-            result.clear();
-            result.put("id_kendaraan", res.getString(1));
-            result.put("jenis_kendaraan", res.getString(2));
-            result.put("waktu_masuk", res.getString(3));
-            return result;
-    }
-    
-    public Map<String, String> ambilData(String platTemp)throws SQLException{
-        this.plat = platTemp;
-         String sql = "SELECT id_kendaraan,jenis_kendaraan,plat_nomor,waktu_masuk FROM parkir WHERE plat_nomor = '"+plat+"'";
-            java.sql.Connection conn= (Connection)Config.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            res.next();
-         
-            result.clear();   
-            result.put("id_kendaraan", res.getString(1));
-            result.put("jenis_kendaraan", res.getString(2));
-            result.put("plat_nomor", res.getString(3));
-            result.put("waktu_masuk", res.getString(4));
-
-            return result;
     }
     
     public void parkirKeluar(String id_kendaraanTemp, String jenis_kendaraanTemp, String platTemp, String waktu_masukTemp, String tarifTemp)throws SQLException{

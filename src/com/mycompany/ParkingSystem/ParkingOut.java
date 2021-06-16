@@ -314,7 +314,7 @@ public class ParkingOut extends javax.swing.JFrame implements Interface1 {
         if(!txtPlat.getText().isEmpty()){
         try{
             
-            result= ken.cekBiaya(txtPlat.getText());
+            result= ken.ambilData(txtPlat.getText());
             lbIdParkir.setText(result.get("id_kendaraan"));
             lbJenis.setText(result.get("jenis_kendaraan"));
             lbWaktuMasuk.setText(ken.lamaParkir(result.get("waktu_masuk")));
@@ -334,8 +334,6 @@ public class ParkingOut extends javax.swing.JFrame implements Interface1 {
     private void btBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBayarActionPerformed
 
         try{
-            java.sql.Connection conn= (Connection)Config.configDB();
-            
             //Mengambil data kendaraan
             result = ken.ambilData(txtPlat.getText());
             String id_kendaraan = result.get("id_kendaraan");
@@ -346,9 +344,8 @@ public class ParkingOut extends javax.swing.JFrame implements Interface1 {
             lbJenis.setText(jenis_kendaraan);
             lbWaktuMasuk.setText(ken.lamaParkir(waktu_masuk));
             lbTotal.setText(ken.hitung(jenis_kendaraan,waktu_masuk));
-            
-            //Menghitung tarif kendaraan
-            String tarif = ken.hitung(jenis_kendaraan,waktu_masuk);
+           
+            String tarif = lbTotal.getText();
             
             //Kendaraan Keluar & masuk ke Report tabel
             ken.parkirKeluar(id_kendaraan, jenis_kendaraan, plat_nomor, waktu_masuk, tarif);

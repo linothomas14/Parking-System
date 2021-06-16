@@ -168,7 +168,7 @@ Kendaraan ken = new Kendaraan();
             String id_kendaraan = ken.parkirMasuk(txtPlat.getText(), cbJenis.getSelectedItem().toString(), con.getDate());
             JOptionPane.showMessageDialog(this, "KARCIS ANDA \n\n"
                     + "No Parkir : " + id_kendaraan + "\n"
-                    + "Plat : " + txtPlat.getText() + "\n"
+                    + "Plat : " + txtPlat.getText().toUpperCase() + "\n"
                     + "Jenis kendaraan : " + cbJenis.getSelectedItem().toString() + "\n"
                     + "Waktu masuk : " + con.getDate()) ;
             kosongkan_form();
