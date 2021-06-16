@@ -10,7 +10,7 @@ Cara pakai projek
     Username = admin, password = admin123  (bisa dilihat di tabel user)
 
 
-Ketentuan Biaya (Belum fix)
+Ketentuan Biaya 
 - Semua kendaraan bebas biaya parkir jika waktu kurang dari 10 menit
 - Motor = 1500 / jam 
 - Mobil = 3000 / jam
