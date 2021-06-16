@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import com.mycompany.Kendaraan.*;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @author Mahasiswa Gunadarma
@@ -13,11 +15,14 @@ import com.mycompany.Kendaraan.*;
 public class ParkingOut extends javax.swing.JFrame implements Interface1 {
     Config con = new Config();
     Kendaraan ken = new Kendaraan();
-    
+    Map<String, String> result = new HashMap<>();; 
+    @Override
     public void kosongkan_form(){
         txtPlat.setText(null);
         lbWaktuMasuk.setText(null);
         lbTotal.setText(null);
+        lbJenis.setText(null);
+        lbIdParkir.setText(null);
     }
 
     public void tampilkan_data(){
@@ -35,8 +40,7 @@ public class ParkingOut extends javax.swing.JFrame implements Interface1 {
             java.sql.ResultSet res = stm.executeQuery(sql);
             
             while(res.next()){
-                String formatMasuk =  res.getString(4);
-                model.addRow(new Object[]{res.getString(1),res.getString(2),res.getString(3),formatMasuk});
+                model.addRow(new Object[]{res.getString(1),res.getString(2),res.getString(3),res.getString(4)});
             }
             tabelParkir.setModel(model);
         }catch(SQLException e){
@@ -309,11 +313,12 @@ public class ParkingOut extends javax.swing.JFrame implements Interface1 {
         // TODO add your handling code here:
         if(!txtPlat.getText().isEmpty()){
         try{
-            String[] result = ken.cekBiaya(txtPlat.getText());
-            lbIdParkir.setText(result[0]);
-            lbJenis.setText(result[1]);
-            lbWaktuMasuk.setText(ken.lamaParkir(result[2]));
-            lbTotal.setText(ken.hitung(result[1],result[2]));
+            
+            result= ken.cekBiaya(txtPlat.getText());
+            lbIdParkir.setText(result.get("id_kendaraan"));
+            lbJenis.setText(result.get("jenis_kendaraan"));
+            lbWaktuMasuk.setText(ken.lamaParkir(result.get("waktu_masuk")));
+            lbTotal.setText(ken.hitung(result.get("jenis_kendaraan"),result.get("waktu_masuk")));
             //perhitungan
         tampilkan_data();
         }catch(HeadlessException | SQLException e){
@@ -332,12 +337,12 @@ public class ParkingOut extends javax.swing.JFrame implements Interface1 {
             java.sql.Connection conn= (Connection)Config.configDB();
             
             //Mengambil data kendaraan
-            String[] result = ken.ambilData(txtPlat.getText());
-            String no_parkir = result[0];
-            String jenis_kendaraan = result[1];
-            String plat_nomor = result[2];
-            String waktu_masuk = result[3];
-            lbIdParkir.setText(no_parkir);
+            result = ken.ambilData(txtPlat.getText());
+            String id_kendaraan = result.get("id_kendaraan");
+            String jenis_kendaraan = result.get("jenis_kendaraan");
+            String plat_nomor = result.get("plat_nomor");
+            String waktu_masuk = result.get("waktu_masuk");
+            lbIdParkir.setText(id_kendaraan);
             lbJenis.setText(jenis_kendaraan);
             lbWaktuMasuk.setText(ken.lamaParkir(waktu_masuk));
             lbTotal.setText(ken.hitung(jenis_kendaraan,waktu_masuk));
@@ -346,7 +351,7 @@ public class ParkingOut extends javax.swing.JFrame implements Interface1 {
             String tarif = ken.hitung(jenis_kendaraan,waktu_masuk);
             
             //Kendaraan Keluar & masuk ke Report tabel
-            ken.parkirKeluar(no_parkir, jenis_kendaraan, plat_nomor, waktu_masuk, tarif);
+            ken.parkirKeluar(id_kendaraan, jenis_kendaraan, plat_nomor, waktu_masuk, tarif);
             
         JOptionPane.showMessageDialog(this, "Selamat jalan") ;
         tampilkan_data();
@@ -368,8 +373,9 @@ public class ParkingOut extends javax.swing.JFrame implements Interface1 {
     public static void main(String args[]) {
         
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                new ParkingOut().setVisible(true);
+                new Login().setVisible(true);
             }
         });
     }

@@ -12,7 +12,7 @@ import java.util.GregorianCalendar;
  */
 public class ParkingIn extends javax.swing.JFrame implements Interface1{
 int waktumulai;
-Config conn = new Config();
+Config con = new Config();
 Kendaraan ken = new Kendaraan();
     public ParkingIn() {
         initComponents();
@@ -165,10 +165,15 @@ Kendaraan ken = new Kendaraan();
         // TODO add your handling code here:
         if(!txtPlat.getText().isEmpty()){
             try{
-            ken.parkirMasuk(txtPlat.getText(), cbJenis.getSelectedItem().toString(), conn.getDate());
+            String id_kendaraan = ken.parkirMasuk(txtPlat.getText(), cbJenis.getSelectedItem().toString(), con.getDate());
+            JOptionPane.showMessageDialog(this, "KARCIS ANDA \n\n"
+                    + "No Parkir : " + id_kendaraan + "\n"
+                    + "Plat : " + txtPlat.getText() + "\n"
+                    + "Jenis kendaraan : " + cbJenis.getSelectedItem().toString() + "\n"
+                    + "Waktu masuk : " + con.getDate()) ;
             kosongkan_form();
             } catch(HeadlessException | SQLException e){
-            JOptionPane.showMessageDialog(null, e.getMessage()) ;
+            JOptionPane.showMessageDialog(null,e.getMessage()) ;
             }
         }
         else {

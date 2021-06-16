@@ -5,6 +5,8 @@
  */
 package com.mycompany.Kendaraan;
 
+import java.util.Map;
+import java.util.HashMap;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,25 +14,44 @@ import com.mycompany.ParkingSystem.Config;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author Mahasiswa Gunadarma
  */
+
 public class Kendaraan {
-    String result[] = new String[5];
     Config con = new Config();
-    public void parkirMasuk(String plat, String jenis_kendaraan, String waktu) throws SQLException{
+    private String id_kendaraan;
+    private String plat;
+    private String jenis_kendaraan;
+    private String waktu_masuk;
+    private String lama_parkir;
+    private String waktu_keluar;
+    private String tarif;
+    Map<String, String> result = new HashMap<>();
+    
+    public String parkirMasuk(String platTemp, String jenis_kendaraanTemp, String waktu_masukTemp) throws SQLException{
+        this.plat = platTemp.toUpperCase();
+        this.jenis_kendaraan = jenis_kendaraanTemp;
+        this.waktu_masuk = waktu_masukTemp;
         String sql ="INSERT INTO parkir  (plat_nomor,jenis_kendaraan,waktu_masuk) VALUES ('"
                     +plat+"','"
                     +jenis_kendaraan+"','"
-                    +waktu+"')";
+                    +waktu_masuk+"')";
             java.sql.Connection conn = (Connection)Config.configDB();
             java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
             pstm.execute();
-            JOptionPane.showMessageDialog(null, "Proses simpan data berhasil") ;
+            
+        String sql1 = "SELECT id_kendaraan FROM parkir WHERE plat_nomor = '"+plat+"'";
+           java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql1);
+            res.next();
+            return this.id_kendaraan = res.getString(1);
     }
-    public String lamaParkir(String waktu_masuk){
-        Config conn = new Config();
+    
+    public String lamaParkir(String waktu_masukTemp){
+        this.waktu_masuk = waktu_masukTemp;
         SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");  
         String dateStart = waktu_masuk;
         String dateStop = con.getDate();
@@ -51,13 +72,16 @@ public class Kendaraan {
         String jam = String.valueOf(diffHours);
         String menit = String.valueOf(diffMinutes);
         String detik = String.valueOf(diffSeconds);
-        String s= hari+ " Hari, " +jam+ " Jam, " +menit+ " Menit, " +detik+ " Detik ";
-    return s ;
+        this.lama_parkir= hari+ " Hari, " +jam+ " Jam, " +menit+ " Menit, " +detik+ " Detik ";
+        System.out.println(lama_parkir);
+    return lama_parkir;
+    
     }
-    public String hitung(String jenis_kendaraan,String waktu_masuk){
-        String dateStart = waktu_masuk;
+    
+    public String hitung(String jenis_kendaraanTemp,String waktu_masukTemp){
+        this.waktu_masuk = waktu_masukTemp;
+        this.jenis_kendaraan = jenis_kendaraanTemp;
         String dateStop = con.getDate();
-        String s;
         long total,biaya = 0,biaya_inap = 0;
         switch(jenis_kendaraan){    
         case "Motor":    
@@ -84,7 +108,7 @@ public class Kendaraan {
         Date d1 = null;
         Date d2 = null;
         try {
-            d1 = format.parse(dateStart);
+            d1 = format.parse(waktu_masuk);
             d2 = format.parse(dateStop);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -106,60 +130,71 @@ public class Kendaraan {
             total = 0;
             }
         }
-        s=String.valueOf(total);
-    return s;
+        this.tarif = String.valueOf(total);
+    return tarif;
     }
-    public void hapusKendaraan(String plat) throws SQLException{
+    
+    public void hapusKendaraan(String platTemp) throws SQLException{
+        this.plat = platTemp;
     String sql = "DELETE FROM parkir WHERE plat_nomor='" + plat+"'";
         java.sql.Connection conn = (Connection)Config.configDB();
         java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
         pstm.execute();
         JOptionPane.showMessageDialog(null, "Proses Hapus data berhasil") ;
     }
-    public String[] cekBiaya(String plat)throws SQLException{
+    
+    public Map<String, String> cekBiaya(String plat)throws SQLException{
         String sql = "SELECT id_kendaraan,jenis_kendaraan,waktu_masuk FROM parkir WHERE plat_nomor = '"+plat+"'";
             java.sql.Connection conn= (Connection)Config.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet res = stm.executeQuery(sql);
             res.next();
-            result[0] = res.getString(1);
-            result[1] = res.getString(2);
-            result[2] = res.getString(3);
+            result.clear();
+            result.put("id_kendaraan", res.getString(1));
+            result.put("jenis_kendaraan", res.getString(2));
+            result.put("waktu_masuk", res.getString(3));
             return result;
     }
-    public String[] ambilData(String plat)throws SQLException{
-        
+    
+    public Map<String, String> ambilData(String platTemp)throws SQLException{
+        this.plat = platTemp;
          String sql = "SELECT id_kendaraan,jenis_kendaraan,plat_nomor,waktu_masuk FROM parkir WHERE plat_nomor = '"+plat+"'";
             java.sql.Connection conn= (Connection)Config.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet res = stm.executeQuery(sql);
             res.next();
-            result[0] = res.getString(1);
-            result[1] = res.getString(2);
-            result[2] = res.getString(3);
-            result[3] = res.getString(4);
-            
-            System.out.println(result[0]);
-            System.out.println(result[1]);
-            System.out.println(result[2]);
-            System.out.println(result[3]);
+         
+            result.clear();   
+            result.put("id_kendaraan", res.getString(1));
+            result.put("jenis_kendaraan", res.getString(2));
+            result.put("plat_nomor", res.getString(3));
+            result.put("waktu_masuk", res.getString(4));
+
             return result;
     }
-    public void parkirKeluar(String no_parkir, String jenis_kendaraan, String plat_nomor, String waktu_masuk, String tarif)throws SQLException{
+    
+    public void parkirKeluar(String id_kendaraanTemp, String jenis_kendaraanTemp, String platTemp, String waktu_masukTemp, String tarifTemp)throws SQLException{
+        this.id_kendaraan = id_kendaraanTemp;
+        this.jenis_kendaraan = jenis_kendaraanTemp;
+        this.plat = platTemp;
+        this.waktu_masuk = waktu_masukTemp;
+        this.tarif = tarifTemp;
+        this.waktu_keluar = con.getDate();
         java.sql.Connection conn= (Connection)Config.configDB();
         String sql1 = "INSERT INTO report  (id_kendaraan,jenis_kendaraan,plat_nomor,waktu_masuk,waktu_keluar,tarif) VALUES ('"
-                    +no_parkir+"','"
+                    +id_kendaraan+"','"
                     +jenis_kendaraan+"','"
-                    +plat_nomor+"','"
+                    +plat+"','"
                     +waktu_masuk +"','"
-                    +con.getDate()+ "','"
+                    +waktu_keluar+ "','"
                     +tarif+"')";
-            java.sql.PreparedStatement pstm1 = conn.prepareStatement(sql1);
-            pstm1.execute();
-            String sql2 = "DELETE FROM parkir WHERE plat_nomor = '"+plat_nomor+"'";
-            java.sql.PreparedStatement pstm = conn.prepareStatement(sql2);
+            java.sql.PreparedStatement pstm = conn.prepareStatement(sql1);
+            pstm.execute();
+            String sql2 = "DELETE FROM parkir WHERE plat_nomor = '"+plat+"'";
+            pstm = conn.prepareStatement(sql2);
             pstm.execute();
 }
+    
 }
 
 
