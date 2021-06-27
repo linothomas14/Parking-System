@@ -1,6 +1,7 @@
-package com.mycompany.ParkingSystem;
+package com.mycompany.GUI;
 
 
+import com.mycompany.Kendaraan.Config;
 import com.mycompany.Kendaraan.*;
 import java.awt.HeadlessException;
 import java.sql.SQLException;

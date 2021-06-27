@@ -1,6 +1,7 @@
-package com.mycompany.ParkingSystem;
+package com.mycompany.GUI;
 
 
+import com.mycompany.Kendaraan.Config;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -60,7 +61,6 @@ public class Report extends javax.swing.JFrame {
         }catch(HeadlessException | SQLException e){
            JOptionPane.showMessageDialog(this, "Data tidak ditemukan "+e.getMessage()) ;
         }
-    
     }
     private void tampilkan_data(){
         DefaultTableModel model = new DefaultTableModel();

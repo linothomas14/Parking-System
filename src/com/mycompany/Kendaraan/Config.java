@@ -1,4 +1,4 @@
-package com.mycompany.ParkingSystem;
+package com.mycompany.Kendaraan;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

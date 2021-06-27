@@ -1,5 +1,6 @@
-package com.mycompany.ParkingSystem;
+package com.mycompany.GUI;
 
+import com.mycompany.Kendaraan.Config;
 import java.awt.HeadlessException;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
@@ -318,7 +319,25 @@ public class ParkingOut extends javax.swing.JFrame implements Interface1 {
             lbIdParkir.setText(result.get("id_kendaraan"));
             lbJenis.setText(result.get("jenis_kendaraan"));
             lbWaktuMasuk.setText(ken.lamaParkir(result.get("waktu_masuk")));
-            lbTotal.setText(ken.hitung(result.get("jenis_kendaraan"),result.get("waktu_masuk")));
+            
+        switch(result.get("jenis_kendaraan")){    
+        case "Motor":    
+            Motor mtr = new Motor();
+            lbTotal.setText(mtr.hitung(result.get("waktu_masuk")));
+            break; 
+        case "Mobil":    
+            Mobil mbl = new Mobil();
+            lbTotal.setText(mbl.hitung(result.get("waktu_masuk")));
+            break; 
+         case "Truk":    
+            Truk truk = new Truk();
+            lbTotal.setText(truk.hitung(result.get("waktu_masuk")));
+            break;
+         case "Bis":    
+            Bis m = new Bis();
+            lbTotal.setText(m.hitung(result.get("waktu_masuk")));
+            break; 
+        }    
             //perhitungan
         tampilkan_data();
         }catch(HeadlessException | SQLException e){

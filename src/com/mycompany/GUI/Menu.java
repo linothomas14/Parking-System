@@ -1,4 +1,4 @@
-package com.mycompany.ParkingSystem;
+package com.mycompany.GUI;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
