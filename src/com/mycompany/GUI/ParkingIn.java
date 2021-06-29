@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 /**
  * @author Mahasiswa Gunadarma
  */
-public class ParkingIn extends javax.swing.JFrame implements Interface1{
+public class ParkingIn extends javax.swing.JFrame{
 int waktumulai;
 Config con = new Config();
 Kendaraan ken = new Kendaraan();
@@ -41,7 +41,7 @@ Kendaraan ken = new Kendaraan();
             }
         }.start();
     }
-    @Override
+
     public void kosongkan_form(){
         txtPlat.setText(null);
         cbJenis.setSelectedItem(this);

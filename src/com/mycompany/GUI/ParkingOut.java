@@ -13,11 +13,11 @@ import java.util.HashMap;
 /**
  * @author Mahasiswa Gunadarma
  */
-public class ParkingOut extends javax.swing.JFrame implements Interface1 {
+public class ParkingOut extends javax.swing.JFrame  {
     Config con = new Config();
     Kendaraan ken = new Kendaraan();
     Map<String, String> result = new HashMap<>();; 
-    @Override
+
     public void kosongkan_form(){
         txtPlat.setText(null);
         lbWaktuMasuk.setText(null);
